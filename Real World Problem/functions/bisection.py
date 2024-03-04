@@ -1,20 +1,20 @@
-from sympy import  exp
+from sympy import  exp, lambdify, Symbol
 
-"""
-    Parameters:
-        a, b: Interval [a, b] where the zero is sought.
-        func: Text representing the function to which the zero is approximated.
-        tol: Tolerance for approximation.
-        iterMax: Maximum iterations to perform.
-
-    Returns:
-        A dictionary containing the approximation ('Approximation'), error ('Error'), and iterations ('Iterations').
-
-    Raises:
-        ValueError: If the bisection method does not converge within the maximum number of iterations
-                    or if Bolzano's condition is not satisfied with the given data.
-"""
 def bisection(a, b, func, tol, iterMax):
+    """
+        Parameters:
+            a, b: Interval [a, b] where the zero is sought.
+            func: Text representing the function to which the zero is approximated.
+            tol: Tolerance for approximation.
+            iterMax: Maximum iterations to perform.
+
+        Returns:
+            A dictionary containing the approximation ('Approximation'), error ('Error'), and iterations ('Iterations').
+
+        Raises:
+            ValueError: If the bisection method does not converge within the maximum number of iterations
+                        or if Bolzano's condition is not satisfied with the given data.
+    """
     if func(a) * func(b) < 0:
         for k in range(iterMax):
             xk = (a + b) / 2
@@ -29,6 +29,8 @@ def bisection(a, b, func, tol, iterMax):
     else:
         raise ValueError("Bolzano condition is not satisfied")
 
-expr = lambda x: exp(x) - x - 2
-result = bisection(1, 2, expr, 1e-4, 1000)
+x = Symbol('x')
+expr = exp(x) - x - 2
+func = lambdify(x, expr)
+result = bisection(1, 2, func, 1e-4, 1000)
 print(result)

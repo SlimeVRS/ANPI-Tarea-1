@@ -34,9 +34,3 @@ def false_position(a, b, func, tol, iterMax):
             return {'Approximation': c, 'Error': error, 'Iterations': k + 1}
 
     raise ValueError("False position method did not converge within the maximum number of iterations.")
-
-x = Symbol('x')
-expr = exp(x) - x - 2
-func = lambdify(x, expr)
-result_false_position = false_position(1, 2, func, 1e-4, 1000)
-print(result_false_position)

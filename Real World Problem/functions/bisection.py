@@ -28,9 +28,3 @@ def bisection(a, b, func, tol, iterMax):
         raise ValueError("Bisection method did not converge within the maximum number of iterations.")
     else:
         raise ValueError("Bolzano condition is not satisfied")
-
-x = Symbol('x')
-expr = exp(x) - x - 2
-func = lambdify(x, expr)
-result = bisection(1, 2, func, 1e-4, 1000)
-print(result)

@@ -1,7 +1,7 @@
 import numpy as np
 import sympy as sp
 
-def muller_method(a, b, func_str, tol=1e-4, iterMax=1000):
+def muller_method(a, b, func_num, tol=1e-4, iterMax=1000):
     """
     Implementación del método de Muller para encontrar una raíz de la función dada.
 
@@ -19,8 +19,8 @@ def muller_method(a, b, func_str, tol=1e-4, iterMax=1000):
     Raises:
         ValueError: Si el método de Muller no converge dentro del número máximo de iteraciones.
     """
-    w = sp.symbols('w')
-    func_num = sp.lambdify(w, func_str)
+    # w = sp.symbols('w')
+    # func_num = sp.lambdify(w, func_str)
 
     for k in range(iterMax):
         x0 = a
@@ -46,10 +46,10 @@ def muller_method(a, b, func_str, tol=1e-4, iterMax=1000):
     raise ValueError("Muller method did not converge within the maximum number of iterations.")
 
 # Argumentos
-a = 0.1
-b = 10
-func_str = 'exp(-w) + (w/5) - 1'
-
-# Llamada a la función muller_method
-result = muller_method(a, b, func_str)
-print(result)
+# a = 0.1
+# b = 10
+# func_str = 'exp(-w) + (w/5) - 1'
+#
+# # Llamada a la función muller_method
+# result = muller_method(a, b, func_str)
+# print(result)

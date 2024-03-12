@@ -7,7 +7,7 @@
 #            ██║           ███████║   ██████║
 #
 ###############################################################################
-# Authors:   Juan Rodriguez Montero
+# Authors:   Juan Rodriguez Montero,
 # Course: ANPI
 # Problem Description:
 #   We are solving for the volume in the context of Van der Waals’ equation,
@@ -30,7 +30,8 @@
 from sympy import Symbol, lambdify
 from functions.bisection import  bisection
 from functions.false_position import  false_position
-from functions.muller import muller_method
+from functions.muller import muller
+from functions.kung_traub import  kung_traub
 
 x = Symbol('x')
 n = 10
@@ -42,10 +43,14 @@ b = 0.0318
 expr = (n * R * T) / (x - n * b) - (a * n**2) / x**2
 func = lambdify(x, expr)
 
+## For Potra Ptak
+initial_guess = 1.0
+
 if __name__ == '__main__':
     result1 = bisection(1, 100, func, 1e-4, 1000)
     result2 = false_position(1, 100, func, 1e-4, 1000)
-    result3 = muller_method(1, 100, func, 1e-4,1000)
+    result3 = muller(1, 100, func, 1e-4,1000)
+    result4 = kung_traub(func, initial_guess, 1e-4, 1000)
 
     formatted_result1 = {
         'Approximation': round(result1['Approximation'], 6),
@@ -64,6 +69,11 @@ if __name__ == '__main__':
         'Error': round(float(result3['Error']), 6),
         'Iterations': result3['Iterations']
     }
+    formatted_result4 = {
+        'Approximation': round(float(result4['Approximation']), 6),
+        'Error': round(float(result4['Error']), 6),
+        'Iterations': result4['Iterations']
+    }
 
     print("Bisection Method:")
     for key, value in formatted_result1.items():
@@ -76,5 +86,11 @@ if __name__ == '__main__':
     print("\nMuller Method:")
     for key, value in formatted_result3.items():
         print(f"{key}: {value}")
+
+    print("\nKung Traub Method:")
+    for key, value in formatted_result4.items():
+        print(f"{key}: {value}")
+
+
 
 

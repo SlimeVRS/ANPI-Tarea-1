@@ -1,3 +1,4 @@
+// Librerias
 #include "funtras.h"
 using namespace std;
 
@@ -6,6 +7,9 @@ cpp_dec_float_50 pi_t = 3.14159265358979323846;
 cpp_dec_float_50 tol = 1e-8;
 int iterMax = 2500;
 
+/*
+* Funcion factorial
+*/
 cpp_dec_float_50 factorial(cpp_dec_float_50 x)
 {
 	if (x == 1 || x == 0)
@@ -15,6 +19,9 @@ cpp_dec_float_50 factorial(cpp_dec_float_50 x)
 	return temp;
 }
 
+/*
+* Funcion auxiliar de divi_t que calcula el epsilon
+*/
 cpp_dec_float_50 divi_t_aux(cpp_dec_float_50 x)
 {
 	cpp_dec_float_50 eps = 2.2204e-16;
@@ -37,9 +44,12 @@ cpp_dec_float_50 divi_t_aux(cpp_dec_float_50 x)
 		return 0;
 }
 
+/*
+* Funcion base de divi_t
+*/
 cpp_dec_float_50 divi_t(cpp_dec_float_50 x)
 {
-	if (0 < x)
+	if (0 != x)
 	{
 		x = abs(x);
 		cpp_dec_float_50 xk = divi_t_aux(x);
@@ -54,15 +64,22 @@ cpp_dec_float_50 divi_t(cpp_dec_float_50 x)
 
 			xk = xk_1;
 		}
-		return xk;	
+		if (x < 0)
+			return -xk;
+		else
+		{
+			return xk;
+		}	
 	}
 	else
 	{
 		return -1;
 	}
-	
 }
 
+/*
+* Funcion para calcular raiz cuadrada
+*/
 cpp_dec_float_50 root_t(cpp_dec_float_50 x, cpp_dec_float_50 y)
 {
 	if (0 < x && 2 < y)
@@ -79,7 +96,7 @@ cpp_dec_float_50 root_t(cpp_dec_float_50 x, cpp_dec_float_50 y)
 
 			if (abs(xk_1 - xk) < tol * abs(xk_1))
 				break;
-			
+
 			xk = xk_1;
 		}
 
@@ -89,6 +106,9 @@ cpp_dec_float_50 root_t(cpp_dec_float_50 x, cpp_dec_float_50 y)
 		return -1;
 }
 
+/*
+* Funcion que calula una raiz dado el indice
+*/
 cpp_dec_float_50 sqrt_t(cpp_dec_float_50 x)
 {
 	if (0 < x)
@@ -110,34 +130,61 @@ cpp_dec_float_50 sqrt_t(cpp_dec_float_50 x)
 	}
 }
 
+/*
+* Funcion que calcula un exponencial
+*/
 cpp_dec_float_50 exp_t(cpp_dec_float_50 x)
 {
 	if (x == 0)
 		return 1;
 
-	cpp_dec_float_50 sum = 0;
-	for (int i = 0; i < iterMax; i++)
-	{
-		cpp_dec_float_50 sk = pow(x, i) * divi_t(factorial(i));
-		cpp_dec_float_50 sk_1 = sk + pow(x, i + 1) * divi_t(factorial(i + 1));
-
-		if (abs(sk_1 - sk) < tol)
-			break;
-		sum += sk;
-	}
-
-	return sum;
-}
-
-// Revisar
-cpp_dec_float_50 sin_t(cpp_dec_float_50 x)
-{
 	cpp_dec_float_50 sk = 0;
 	cpp_dec_float_50 sk_1 = 0;
 	for (int i = 0; i < iterMax; i++)
 	{
+		sk += pow(x, i) * divi_t(factorial(i));
+		sk_1 = sk + pow(x, i + 1) * divi_t(factorial(i + 1));
+
+		if (abs(sk_1 - sk) < tol)
+			break;
+	}
+
+	return sk;
+}
+
+/*
+* Funcion que arregla un valor para algunas funciones trigonometricas
+*/
+cpp_dec_float_50 fix_trigonometry_numb(cpp_dec_float_50 x)
+{
+	while (x < 0 || 2*pi_t < x)
+	{
+		if (x < 0)
+		{
+			x = x + 2 * pi_t;
+		}
+		else
+		{
+			x = x - 2 * pi_t;
+		}
+	}
+	return x;
+}
+
+/*
+* Funcion que calcula el seno de un valor
+*/
+cpp_dec_float_50 sin_t(cpp_dec_float_50 x)
+{
+	x = fix_trigonometry_numb(x);
+	cpp_dec_float_50 sk = 0;
+	cpp_dec_float_50 sk_1 = 0;
+	int i;
+	for (i = 0; i < iterMax; i++)
+	{
 		sk += pow(-1, i) * pow(x, 2 * i + 1) * divi_t(factorial(2 * i + 1));
-		sk_1 = sk + pow(-1, i) * pow(x, 2 * i + 1) * divi_t(factorial(2 * i + 1));
+		int i_1 = i + 1;
+		sk_1 = sk + pow(-1, i_1) * pow(x, 2 * i_1 + 1) * divi_t(factorial(2 * i_1 + 1));
 
 		if (abs(sk_1 - sk) < tol)
 			break;
@@ -145,55 +192,68 @@ cpp_dec_float_50 sin_t(cpp_dec_float_50 x)
 	return sk;
 }
 
-// Revisar
+/*
+* Funcion que calcula el coseno de un valor
+*/
 cpp_dec_float_50 cos_t(cpp_dec_float_50 x)
 {
-	cpp_dec_float_50 sum = 0;
+	x = fix_trigonometry_numb(x);
+	cpp_dec_float_50 sk = 0;
+	cpp_dec_float_50 sk_1 = 0;
 	for (int i = 0; i < iterMax; i++)
 	{
-		cpp_dec_float_50 sk = pow(-1, i) * pow(x, 2 * i) * divi_t(factorial(2 * i));
-		cpp_dec_float_50 sk_1 = pow(-1, (i + 1)) * pow(x, 2 * (i + 1)) * divi_t(factorial(2 * (i + 1)));
+		sk += pow(-1, i) * pow(x, 2 * i) * divi_t(factorial(2 * i));
+		int i_1 = i + 1;
+		sk_1 = sk + pow(-1, (i_1 + 1)) * pow(x, 2 * (i_1 + 1)) * divi_t(factorial(2 * (i_1 + 1)));
 
 		if (abs(sk_1 - sk) < tol)
 			break;
-
-		sum += sk;
 	}
-
-	return sum;
+	return sk;
 }
 
-// Revisar
+/*
+* Funcion que calcula la tangente de un valor
+*/
 cpp_dec_float_50 tan_t(cpp_dec_float_50 x)
 {
 	if (x == pi_t * divi_t(2))
+	{
 		return NULL;
+	}
 	else
+	{
+		x = fix_trigonometry_numb(x);
 		return sin_t(x) * divi_t(cos_t(x));
+	}
 }
 
+/*
+* Funcion que calcula el logaritmo natural de un valor
+*/
 cpp_dec_float_50 ln_t(cpp_dec_float_50 x)
 {
 	if (x < 0)
 		return -1;
-	cpp_dec_float_50 sum = 0;
+	cpp_dec_float_50 sk = 0;
+	cpp_dec_float_50 sk_1 = 0;
 
 	for (int i = 0; i < iterMax; i++)
 	{
+		sk += divi_t(2 * i + 1) * pow((x - 1) * divi_t(x + 1), 2 * i);
 		int i_1 = i + 1;
-
-		cpp_dec_float_50 sk = divi_t(2 * i + 1) * pow((x - 1) * divi_t(x + 1), 2 * i);
-		cpp_dec_float_50 sk_1 = divi_t(2 * i_1 + 1) * pow((x - 1) * divi_t(x + 1), 2 * i_1);
+		sk_1 = sk + divi_t(2 * i_1 + 1) * pow((x - 1) * divi_t(x + 1), 2 * i_1);
 
 		if (abs(sk_1 - sk) < tol)
 			break;
-
-		sum += sk;
 	}
 
-	return (2 * (x - 1)) * divi_t(x + 1) * sum;
+	return (2 * (x - 1)) * divi_t(x + 1) * sk;
 }
 
+/*
+* Funcion que calcula el logaritmo de un valor segun la base dada
+*/
 cpp_dec_float_50 log_t(cpp_dec_float_50 x, cpp_dec_float_50 y)
 {
 	if (x < 0)
@@ -201,6 +261,9 @@ cpp_dec_float_50 log_t(cpp_dec_float_50 x, cpp_dec_float_50 y)
 	return ln_t(x) * divi_t(ln_t(y));
 }
 
+/*
+* Funcion que calcula el seno hipervolico de un valor
+*/
 cpp_dec_float_50 sinh_t(cpp_dec_float_50 x)
 {
 	cpp_dec_float_50 sk = 0;
@@ -208,7 +271,8 @@ cpp_dec_float_50 sinh_t(cpp_dec_float_50 x)
 	for (int i = 0; i < iterMax; i++)
 	{
 		sk += pow(x, 2 * i + 1) * divi_t(factorial(2 * i + 1));
-		sk_1 = sk + pow(x, 2 * i + 1) * divi_t(factorial(2 * i + 1));
+		int i_1 = i + 1;
+		sk_1 = sk + pow(x, 2 * i_1 + 1) * divi_t(factorial(2 * i_1 + 1));
 
 		if (abs(sk_1 - sk) < tol)
 			break;
@@ -216,6 +280,9 @@ cpp_dec_float_50 sinh_t(cpp_dec_float_50 x)
 	return sk;
 }
 
+/*
+* Funcion que calcula el coseno hiperbolico de una funcion
+*/
 cpp_dec_float_50 cosh_t(cpp_dec_float_50 x)
 {
 	cpp_dec_float_50 sk = 0;
@@ -223,19 +290,26 @@ cpp_dec_float_50 cosh_t(cpp_dec_float_50 x)
 	for (int i = 0; i < iterMax; i++)
 	{
 		sk += pow(x, 2 * i) * divi_t(factorial(2 * i));
-		sk_1 = sk + pow(x, 2 * i) * divi_t(factorial(2 * i));
-		
+		int i_1 = i + 1;
+		sk_1 = sk + pow(x, 2 * i_1) * divi_t(factorial(2 * i_1));
+
 		if (abs(sk_1 - sk) < tol)
 			break;
 	}
 	return sk;
 }
 
+/*
+* Funcion que calcula la tangente hiperbolica de una funcion
+*/
 cpp_dec_float_50 tanh_t(cpp_dec_float_50 x)
 {
 	return sinh_t(x) * divi_t(cosh_t(x));
 }
 
+/*
+* Funcion que calcula el arcoseno de un valor
+*/
 cpp_dec_float_50 asin_t(cpp_dec_float_50 x)
 {
 	if (1 < x or x < -1)
@@ -246,7 +320,8 @@ cpp_dec_float_50 asin_t(cpp_dec_float_50 x)
 	for (int i = 0; i < iterMax; i++)
 	{
 		sk += factorial(2 * i) * divi_t(pow(4, i) * pow(factorial(i), 2) * (2 * i + 1)) * pow(x, 2 * i + 1);
-		sk_1 = sk + factorial(2 * i) * divi_t(pow(4, i) * pow(factorial(i), 2) * (2 * i + 1)) * pow(x, 2 * i + 1);
+		int i_1 = i + 1;
+		sk_1 = sk + factorial(2 * i_1) * divi_t(pow(4, i_1) * pow(factorial(i_1), 2) * (2 * i_1 + 1)) * pow(x, 2 * i_1 + 1);
 
 		if (abs(sk_1 - sk) < tol)
 			break;
@@ -254,6 +329,9 @@ cpp_dec_float_50 asin_t(cpp_dec_float_50 x)
 	return sk;
 }
 
+/*
+* Funcion que calcula el arcocoseno de un valor
+*/
 cpp_dec_float_50 acos_t(cpp_dec_float_50 x)
 {
 	if (1 < x or x < -1)
@@ -262,6 +340,9 @@ cpp_dec_float_50 acos_t(cpp_dec_float_50 x)
 	return pi_t * divi_t(2) - asin_t(x);
 }
 
+/*
+* Funcion que calcula la arcotangente de un valor
+*/
 cpp_dec_float_50 atan_t(cpp_dec_float_50 x)
 {
 	cpp_dec_float_50 sk = 0;
@@ -271,7 +352,8 @@ cpp_dec_float_50 atan_t(cpp_dec_float_50 x)
 		for (int i = 0; i < iterMax; i++)
 		{
 			sk += pow(-1, i) * pow(x, 2 * i + 1) * divi_t(2 * i + 1);
-			sk_1 = sk + pow(-1, i) * pow(x, 2 * i + 1) * divi_t(2 * i + 1);
+			int i_1 = i + 1;
+			sk_1 = sk + pow(-1, i_1) * pow(x, 2 * i_1 + 1) * divi_t(2 * i_1 + 1);
 
 			if (abs(sk_1 - sk) < tol)
 				break;
@@ -283,7 +365,8 @@ cpp_dec_float_50 atan_t(cpp_dec_float_50 x)
 		for (int i = 0; i < iterMax; i++)
 		{
 			sk = pow(-1, i) * divi_t(2 * i + 1) * divi_t(pow(x, 2 * i + 1));
-			sk_1 = sk + pow(-1, i) * divi_t(2 * i + 1) * divi_t(pow(x, 2 * i + 1));
+			int i_1 = i + 1;
+			sk_1 = sk + pow(-1, i_1) * divi_t(2 * i_1 + 1) * divi_t(pow(x, 2 * i_1 + 1));
 
 			if (abs(sk_1 - sk) < tol)
 				break;
@@ -296,10 +379,13 @@ cpp_dec_float_50 atan_t(cpp_dec_float_50 x)
 		{
 			return pi_t * divi_t(2) - sk;
 		}
-		
+
 	}
 }
 
+/*
+* Funcion que calcula la cosecante de un valor
+*/
 cpp_dec_float_50 csc_t(cpp_dec_float_50 x)
 {
 	cpp_dec_float_50 ans = sin_t(x);
@@ -308,6 +394,9 @@ cpp_dec_float_50 csc_t(cpp_dec_float_50 x)
 	return divi_t(ans);
 }
 
+/*
+* Funcion que calcula la secante de un valor
+*/
 cpp_dec_float_50 sec_t(cpp_dec_float_50 x)
 {
 	cpp_dec_float_50 ans = cos_t(x);
@@ -316,6 +405,9 @@ cpp_dec_float_50 sec_t(cpp_dec_float_50 x)
 	return divi_t(ans);
 }
 
+/*
+* Funcion que calcula la cotangente de un valor
+*/
 cpp_dec_float_50 cot_t(cpp_dec_float_50 x)
 {
 	cpp_dec_float_50 num = cos_t(x);
@@ -325,38 +417,47 @@ cpp_dec_float_50 cot_t(cpp_dec_float_50 x)
 	return num * divi_t(den);
 }
 
+/*
+* Funcion que obtiene si un valor es entero o no
+*/
+bool is_integer(cpp_dec_float_50 x)
+{
+	int parteEntera = int(x);
+	return x - parteEntera == 0;
+}
+
 int main()
 {
 	cpp_dec_float_50 x = 10;
 
-	// Factorial
+	// Factorial 
 	cpp_dec_float_50 fact = factorial(x);
-	cout << "Factorial de " << x << " es " << fact;
+	cout << "Factorial de " << x << " es " << setprecision(numeric_limits<cpp_dec_float_50>::digits10) << fact;
 
-	// Inverso
+	// Inverso 
 	cpp_dec_float_50 inv = divi_t(x);
 	cout << "\nInverso de " << x << " es aproximadamente " << inv;
 
-	// Raiz cuadrada
+	// Raiz cuadrada 
 	cpp_dec_float_50 sqrt = sqrt_t(x);
 	cout << "\nRaiz cuadrada de " << x << " es aproximadamente " << sqrt;
 
-	// Raiz
+	// Raiz 
 	cpp_dec_float_50 y = 3;
 	cpp_dec_float_50 root = root_t(x, y);
 	cout << "\nRaiz de " << x << " con indice " << y << " es aproximadamente " << root;
 
-	// Exponencial
+	// Exponencial 
 	x = 3;
 	cpp_dec_float_50 exp = exp_t(x);
 	cout << "\nExponencial de " << x << " es aproximadamente " << exp;
 
-	// Logaritmo natural
+	// Logaritmo natural 
 	x = 100;
 	cpp_dec_float_50 ln = ln_t(x);
 	cout << "\nLogaritmo natural de " << x << " es aproximadamente " << ln;
 
-	// Logaritmo x base y
+	// Logaritmo x base y 
 	y = 10;
 	cpp_dec_float_50 log = log_t(x, y);
 	cout << "\nLogaritmo de " << x << " base " << y << " es aproximadamente " << log;
@@ -373,6 +474,7 @@ int main()
 	cpp_dec_float_50 tan = tan_t(x);
 	cout << "\nTan de " << x << " es aproximadamente " << tan;
 
+	x = 4;
 	// Seno hiperbolic
 	cpp_dec_float_50 sinh = sinh_t(x);
 	cout << "\nSeno hiperbolico de " << x << " es aproximadamente " << sinh;

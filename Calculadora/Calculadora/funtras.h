@@ -1,4 +1,4 @@
-#ifndef FUNTRAS_H
+﻿#ifndef FUNTRAS_H
 #define FUNTRAS_H
 
 #include <iostream>
@@ -49,13 +49,20 @@ cpp_dec_float_50 sqrt_t(cpp_dec_float_50 x);
 */
 cpp_dec_float_50 exp_t(cpp_dec_float_50 x);
 
+/*
+* @brief Fix a given value for some trigonometrical functions
+* @param x Value to be fixed
+* @return Value fixed between the interval 0 < x < 2pi or -2pi < x < 0
+*/
+cpp_dec_float_50 fix_trigonometry_numb(cpp_dec_float_50 x);
+
 /**
 * @brief Gets the sine value of x
 * @param x Value to be operated
 * @return Decimal aproximation
 */
-cpp_dec_float_50 cos_t(cpp_dec_float_50 x);
 
+cpp_dec_float_50 cos_t(cpp_dec_float_50 x);
 /**
 * @brief Gets the cosine value of x
 * @param x Value to be operated
@@ -146,5 +153,12 @@ cpp_dec_float_50 sec_t(cpp_dec_float_50 x);
 * @return Decimal aproximation
 */
 cpp_dec_float_50 cot_t(cpp_dec_float_50 x);
+
+/*
+* @brief Gets whether a value is integer or not
+* @param x Value to be evaluated
+* @returns A boolena result
+*/
+bool is_integer(cpp_dec_float_50 x);
 
 #endif // !FUNTRAS_H

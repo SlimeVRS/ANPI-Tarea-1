@@ -49,32 +49,43 @@ cpp_dec_float_50 divi_t_aux(cpp_dec_float_50 x)
 */
 cpp_dec_float_50 divi_t(cpp_dec_float_50 x)
 {
-	if (0 != x)
+	try
 	{
-		x = abs(x);
-		cpp_dec_float_50 xk = divi_t_aux(x);
-		cpp_dec_float_50 xk_1 = 0;
-
-		for (int i = 0; i < iterMax; i++)
+		if (0 != x)
 		{
-			xk_1 = xk * (2 - x * xk);
+			x = abs(x);
+			cpp_dec_float_50 xk = divi_t_aux(x);
+			cpp_dec_float_50 xk_1 = 0;
 
-			if (abs(xk_1 - xk) < tol * abs(xk_1))
-				break;
+			for (int i = 0; i < iterMax; i++)
+			{
+				xk_1 = xk * (2 - x * xk);
 
-			xk = xk_1;
+				if (abs(xk_1 - xk) < tol * abs(xk_1))
+					break;
+
+				xk = xk_1;
+			}
+			if (x < 0)
+				return -xk;
+			else
+			{
+				return xk;
+			}
 		}
-		if (x < 0)
-			return -xk;
 		else
 		{
-			return xk;
-		}	
-	}
-	else
+			throw runtime_error(
+				"Division por cero!"
+			);
+		}
+	}	
+	
+	catch (const exception& e)
 	{
-		return -1;
+		cout << "\nERROR: " << e.what() << endl;
 	}
+	return 0;
 }
 
 /*
@@ -82,28 +93,38 @@ cpp_dec_float_50 divi_t(cpp_dec_float_50 x)
 */
 cpp_dec_float_50 root_t(cpp_dec_float_50 x, cpp_dec_float_50 y)
 {
-	if (0 < x && 2 < y)
+	try
 	{
-		cpp_dec_float_50 xk = x * divi_t(2);
-		cpp_dec_float_50 xk_1 = 0;
-
-		for (int i = 0; i < iterMax; i++)
+		if (0 < x && 2 < y)
 		{
-			cpp_dec_float_50 numerator = pow(xk, y) - x;
-			cpp_dec_float_50 denominator = y * pow(xk, y - 1);
+			cpp_dec_float_50 xk = x * divi_t(2);
+			cpp_dec_float_50 xk_1 = 0;
 
-			xk_1 = xk - (numerator * divi_t(denominator));
+			for (int i = 0; i < iterMax; i++)
+			{
+				cpp_dec_float_50 numerator = pow(xk, y) - x;
+				cpp_dec_float_50 denominator = y * pow(xk, y - 1);
 
-			if (abs(xk_1 - xk) < tol * abs(xk_1))
-				break;
+				xk_1 = xk - (numerator * divi_t(denominator));
 
-			xk = xk_1;
+				if (abs(xk_1 - xk) < tol * abs(xk_1))
+					break;
+
+				xk = xk_1;
+			}
+			return xk;
+
+			if (x < 0)
+				throw runtime_error(
+					"No se puede obtener una raiz de un numero negativo!"
+				);
 		}
-
-		return xk;
 	}
-	if (x < 0)
-		return -1;
+	catch (const exception& e)
+	{
+		cout << "\nERROR: " << e.what() << endl;
+	}
+	return 0;
 }
 
 /*
@@ -111,23 +132,33 @@ cpp_dec_float_50 root_t(cpp_dec_float_50 x, cpp_dec_float_50 y)
 */
 cpp_dec_float_50 sqrt_t(cpp_dec_float_50 x)
 {
-	if (0 < x)
+	try
 	{
-		cpp_dec_float_50 x0 = x * divi_t(2);
-		cpp_dec_float_50 x1 = (x0 + x * divi_t(x0)) * divi_t(2);
-		for (int i = 0; i < iterMax; i++)
+		if (0 < x)
 		{
-			x0 = x1;
-			x1 = (x0 + x * divi_t(x0)) * divi_t(2);
-			if (abs(x1 - x0) < tol * abs(x1))
-				break;
+			cpp_dec_float_50 x0 = x * divi_t(2);
+			cpp_dec_float_50 x1 = (x0 + x * divi_t(x0)) * divi_t(2);
+			for (int i = 0; i < iterMax; i++)
+			{
+				x0 = x1;
+				x1 = (x0 + x * divi_t(x0)) * divi_t(2);
+				if (abs(x1 - x0) < tol * abs(x1))
+					break;
+			}
+			return x1;
 		}
-		return x1;
+		else
+		{
+			throw runtime_error(
+				"No se puede obtener una raiz de un numero negativo!"
+			);
+		}
 	}
-	else
+	catch (const exception& e)
 	{
-		return -1;
+		cout << "\nERROR: " << e.what() << endl;
 	}
+	return 0;
 }
 
 /*
@@ -217,15 +248,20 @@ cpp_dec_float_50 cos_t(cpp_dec_float_50 x)
 */
 cpp_dec_float_50 tan_t(cpp_dec_float_50 x)
 {
-	if (x == pi_t * divi_t(2))
+	try
 	{
-		return NULL;
+		cpp_dec_float_50 num = sin_t(x);
+		cpp_dec_float_50 den = cos_t(x);
+		if (den == 0)
+			throw runtime_error(
+				"Tangente de n * pi/2"
+			);
 	}
-	else
+	catch (const exception& e)
 	{
-		x = fix_trigonometry_numb(x);
-		return sin_t(x) * divi_t(cos_t(x));
+		cout << "\nERROR: " << e.what() << endl;
 	}
+	return 0;
 }
 
 /*
@@ -233,22 +269,32 @@ cpp_dec_float_50 tan_t(cpp_dec_float_50 x)
 */
 cpp_dec_float_50 ln_t(cpp_dec_float_50 x)
 {
-	if (x < 0)
-		return -1;
-	cpp_dec_float_50 sk = 0;
-	cpp_dec_float_50 sk_1 = 0;
-
-	for (int i = 0; i < iterMax; i++)
+	try
 	{
-		sk += divi_t(2 * i + 1) * pow((x - 1) * divi_t(x + 1), 2 * i);
-		int i_1 = i + 1;
-		sk_1 = sk + divi_t(2 * i_1 + 1) * pow((x - 1) * divi_t(x + 1), 2 * i_1);
+		if (x <= 0)
+			throw runtime_error(
+				"No existe el logaritmo natural de numeros negativos!"
+			);
+		cpp_dec_float_50 sk = 0;
+		cpp_dec_float_50 sk_1 = 0;
 
-		if (abs(sk_1 - sk) < tol)
-			break;
+		for (int i = 0; i < iterMax; i++)
+		{
+			sk += divi_t(2 * i + 1) * pow((x - 1) * divi_t(x + 1), 2 * i);
+			int i_1 = i + 1;
+			sk_1 = sk + divi_t(2 * i_1 + 1) * pow((x - 1) * divi_t(x + 1), 2 * i_1);
+
+			if (abs(sk_1 - sk) < tol)
+				break;
+		}
+
+		return (2 * (x - 1)) * divi_t(x + 1) * sk;
 	}
-
-	return (2 * (x - 1)) * divi_t(x + 1) * sk;
+	catch (const exception& e)
+	{
+		cout << "\nERROR: " << e.what() << endl;
+	}
+	return 0;
 }
 
 /*
@@ -256,9 +302,19 @@ cpp_dec_float_50 ln_t(cpp_dec_float_50 x)
 */
 cpp_dec_float_50 log_t(cpp_dec_float_50 x, cpp_dec_float_50 y)
 {
-	if (x < 0)
-		return -1;
-	return ln_t(x) * divi_t(ln_t(y));
+	try
+	{
+		if (x <= 0)
+			throw runtime_error(
+				"No existe el logaritmo para numeros negativos!"
+			);
+		return ln_t(x) * divi_t(ln_t(y));
+	}
+	catch (const exception& e)
+	{
+		cout << "\nERROR: " << e.what() << endl;
+	}
+	return 0;
 }
 
 /*
@@ -312,21 +368,31 @@ cpp_dec_float_50 tanh_t(cpp_dec_float_50 x)
 */
 cpp_dec_float_50 asin_t(cpp_dec_float_50 x)
 {
-	if (1 < x or x < -1)
-		return NULL;
-
-	cpp_dec_float_50 sk = 0;
-	cpp_dec_float_50 sk_1 = 0;
-	for (int i = 0; i < iterMax; i++)
+	try
 	{
-		sk += factorial(2 * i) * divi_t(pow(4, i) * pow(factorial(i), 2) * (2 * i + 1)) * pow(x, 2 * i + 1);
-		int i_1 = i + 1;
-		sk_1 = sk + factorial(2 * i_1) * divi_t(pow(4, i_1) * pow(factorial(i_1), 2) * (2 * i_1 + 1)) * pow(x, 2 * i_1 + 1);
+		if (1 < x or x < -1)
+			throw runtime_error(
+				"Fuera de dominio [-1, 1]"
+			);
 
-		if (abs(sk_1 - sk) < tol)
-			break;
+		cpp_dec_float_50 sk = 0;
+		cpp_dec_float_50 sk_1 = 0;
+		for (int i = 0; i < iterMax; i++)
+		{
+			sk += factorial(2 * i) * divi_t(pow(4, i) * pow(factorial(i), 2) * (2 * i + 1)) * pow(x, 2 * i + 1);
+			int i_1 = i + 1;
+			sk_1 = sk + factorial(2 * i_1) * divi_t(pow(4, i_1) * pow(factorial(i_1), 2) * (2 * i_1 + 1)) * pow(x, 2 * i_1 + 1);
+
+			if (abs(sk_1 - sk) < tol)
+				break;
+		}
+		return sk;
 	}
-	return sk;
+	catch (const exception e)
+	{
+		cout << "\nERROR: " << e.what() << endl;
+	}
+	return 0;
 }
 
 /*
@@ -334,10 +400,20 @@ cpp_dec_float_50 asin_t(cpp_dec_float_50 x)
 */
 cpp_dec_float_50 acos_t(cpp_dec_float_50 x)
 {
-	if (1 < x or x < -1)
-		return NULL;
+	try
+	{
+		if (1 < x or x < -1)
+			throw runtime_error(
+				"Fuera de dominio [-1, 1]"
+			);
 
-	return pi_t * divi_t(2) - asin_t(x);
+		return pi_t * divi_t(2) - asin_t(x);
+	}
+	catch (const exception e)
+	{
+		cout << "\nERROR: " << e.what() << endl;
+	}
+	return 0;
 }
 
 /*
@@ -388,10 +464,20 @@ cpp_dec_float_50 atan_t(cpp_dec_float_50 x)
 */
 cpp_dec_float_50 csc_t(cpp_dec_float_50 x)
 {
-	cpp_dec_float_50 ans = sin_t(x);
-	if (ans == 0)
-		return NULL;
-	return divi_t(ans);
+	try
+	{
+		cpp_dec_float_50 ans = sin_t(x);
+		if (ans == 0)
+			throw runtime_error(
+				"Cosecante de n * pi"
+			);
+		return divi_t(ans);
+	}
+	catch (const exception e)
+	{
+		cout << "\nERROR: " << e.what() << endl;
+	}
+	return 0;
 }
 
 /*
@@ -399,10 +485,20 @@ cpp_dec_float_50 csc_t(cpp_dec_float_50 x)
 */
 cpp_dec_float_50 sec_t(cpp_dec_float_50 x)
 {
-	cpp_dec_float_50 ans = cos_t(x);
-	if (ans == 0)
-		return NULL;
-	return divi_t(ans);
+	try
+	{
+		cpp_dec_float_50 ans = cos_t(x);
+		if (ans == 0)
+			throw runtime_error(
+				"Secante de n * pi / 2"
+			);
+		return divi_t(ans);
+	}
+	catch (const exception& e)
+	{
+		cout << "\nERROR: " << e.what() << endl;
+	}
+	return 0;
 }
 
 /*
@@ -410,24 +506,46 @@ cpp_dec_float_50 sec_t(cpp_dec_float_50 x)
 */
 cpp_dec_float_50 cot_t(cpp_dec_float_50 x)
 {
-	cpp_dec_float_50 num = cos_t(x);
-	cpp_dec_float_50 den = sin_t(x);
-	if (den == 0)
-		return NULL;
-	return num * divi_t(den);
+	try
+	{
+		cpp_dec_float_50 num = cos_t(x);
+		cpp_dec_float_50 den = sin_t(x);
+		if (den == 0)
+			throw runtime_error(
+				"Cotangente de n * pi"
+			);
+		return num * divi_t(den);
+	}
+	catch (const exception& e)
+	{
+		cout << "\nERROR: " << e.what() << endl;
+	}
+	return 0;
 }
 
 cpp_dec_float_50 power_t(cpp_dec_float_50 x, cpp_dec_float_50 y)
 {
-	if (x == 0 && y == 0)
-		return NULL;
-	if (x == 0 && y < 0)
-		return NULL;
-	if (x == 0)
-		return 0;
-	if(x < 0)
-		return -exp_t(y * ln_t(-x));
-	return exp_t(y * ln_t(x));
+	try
+	{
+		if (x == 0 && y == 0)
+			throw runtime_error(
+				"0^0 es indeterminado"
+			);
+		if (x == 0 && y < 0)
+			throw runtime_error(
+				"Division por cero!"
+			);
+		if (x == 0)
+			return 0;
+		if (x < 0)
+			return -exp_t(y * ln_t(-x));
+		return exp_t(y * ln_t(x));
+	}
+	catch (const exception& e)
+	{
+		cout << "\nERROR: " << e.what() << endl;
+	}
+	return 0;
 }
 
 int main()
@@ -438,11 +556,13 @@ int main()
 	cpp_dec_float_50 fact = factorial(x);
 	cout << "Factorial de " << x << " es " << setprecision(numeric_limits<cpp_dec_float_50>::digits10) << fact;
 
-	// Inverso 
+	// Inverso
+	x = 0;
 	cpp_dec_float_50 inv = divi_t(x);
 	cout << "\nInverso de " << x << " es aproximadamente " << inv;
 
 	// Raiz cuadrada 
+	x = -5;
 	cpp_dec_float_50 sqrt = sqrt_t(x);
 	cout << "\nRaiz cuadrada de " << x << " es aproximadamente " << sqrt;
 
@@ -451,13 +571,8 @@ int main()
 	cpp_dec_float_50 root = root_t(x, y);
 	cout << "\nRaiz de " << x << " con indice " << y << " es aproximadamente " << root;
 
-	// Exponencial 
-	x = 3;
-	cpp_dec_float_50 exp = exp_t(x);
-	cout << "\nExponencial de " << x << " es aproximadamente " << exp;
-
-	// Logaritmo natural 
-	x = 100;
+	x = 0;
+	// Logaritmo natural
 	cpp_dec_float_50 ln = ln_t(x);
 	cout << "\nLogaritmo natural de " << x << " es aproximadamente " << ln;
 
@@ -466,43 +581,20 @@ int main()
 	cpp_dec_float_50 log = log_t(x, y);
 	cout << "\nLogaritmo de " << x << " base " << y << " es aproximadamente " << log;
 
-	// Sen
-	cpp_dec_float_50 sen = sin_t(x);
-	cout << "\nSen de " << x << " es aproximadamente " << sen;
-
-	// Cos
-	cpp_dec_float_50 cos = cos_t(x);
-	cout << "\nCos de " << x << " es aproximadamente " << cos;
-
+	x = pi_t * divi_t(2);
 	// Tan
 	cpp_dec_float_50 tan = tan_t(x);
 	cout << "\nTan de " << x << " es aproximadamente " << tan;
 
-	x = 4;
-	// Seno hiperbolic
-	cpp_dec_float_50 sinh = sinh_t(x);
-	cout << "\nSeno hiperbolico de " << x << " es aproximadamente " << sinh;
-
-	// Coseno hiperbolico
-	cpp_dec_float_50 cosh = cosh_t(x);
-	cout << "\nCoseno hiperbolico de " << x << " es aproximadamente " << cosh;
-
-	// Tangente hiperbolico
-	cpp_dec_float_50 tanh = tanh_t(x);
-	cout << "\nTangente hiperbolico de " << x << " es aproximadamente " << tanh;
-
 	// Arcoseno (revisar)
-	x = 1;
+	x = 5 ;
 	cpp_dec_float_50 asin = asin_t(x);
 	cout << "\nArcseno de " << x << " es aproximadamente " << asin;
 
 	cpp_dec_float_50 acos = acos_t(x);
 	cout << "\nArcoseno de " << x << " es aproximadamente " << acos;
 
-	cpp_dec_float_50 atan = atan_t(x);
-	cout << "\nArcotangente de " << x << " es aproximadamente " << atan;
-
-	cout << "########################\n";
+	cout << "\n\n########################\n";
 	cout << "# Seccion de potencias #\n";
 	cout << "########################\n";
 

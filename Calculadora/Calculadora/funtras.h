@@ -154,11 +154,11 @@ cpp_dec_float_50 sec_t(cpp_dec_float_50 x);
 */
 cpp_dec_float_50 cot_t(cpp_dec_float_50 x);
 
-/*
-* @brief Gets whether a value is integer or not
-* @param x Value to be evaluated
-* @returns A boolena result
+/**
+* @brief Gets the exponential value of x given y times
+* @param x Base of the function
+* @param y Exponent of the function
+* @return Integer or decimal value
 */
-bool is_integer(cpp_dec_float_50 x);
-
+cpp_dec_float_50 power_t(cpp_dec_float_50 x, cpp_dec_float_50 y);
 #endif // !FUNTRAS_H

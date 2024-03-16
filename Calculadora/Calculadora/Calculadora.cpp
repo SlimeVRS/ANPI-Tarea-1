@@ -417,13 +417,17 @@ cpp_dec_float_50 cot_t(cpp_dec_float_50 x)
 	return num * divi_t(den);
 }
 
-/*
-* Funcion que obtiene si un valor es entero o no
-*/
-bool is_integer(cpp_dec_float_50 x)
+cpp_dec_float_50 power_t(cpp_dec_float_50 x, cpp_dec_float_50 y)
 {
-	int parteEntera = int(x);
-	return x - parteEntera == 0;
+	if (x == 0 && y == 0)
+		return NULL;
+	if (x == 0 && y < 0)
+		return NULL;
+	if (x == 0)
+		return 0;
+	if(x < 0)
+		return -exp_t(y * ln_t(-x));
+	return exp_t(y * ln_t(x));
 }
 
 int main()
@@ -497,5 +501,64 @@ int main()
 
 	cpp_dec_float_50 atan = atan_t(x);
 	cout << "\nArcotangente de " << x << " es aproximadamente " << atan;
+
+	cout << "########################\n";
+	cout << "# Seccion de potencias #\n";
+	cout << "########################\n";
+
+	x = 0;
+	y = 0;
+
+	cpp_dec_float_50 pow = power_t(x, y);
+	cout << "\nPotencia " << x << " a la " << y << " es aproximadamente " << pow;
+
+	x = 0;
+	y = -8;
+
+	pow = power_t(x, y);
+	cout << "\nPotencia " << x << " a la " << y << " es aproximadamente " << pow;
+
+	x = 4;
+	y = 0;
+
+	pow = power_t(x, y);
+	cout << "\nPotencia " << x << " a la " << y << " es aproximadamente " << pow;
+
+	x = -4;
+	y = 0;
+
+	pow = power_t(x, y);
+	cout << "\nPotencia " << x << " a la " << y << " es aproximadamente " << pow;
+
+	x = 2;
+	y = 3;
+
+	pow = power_t(x, y);
+	cout << "\nPotencia " << x << " a la " << y << " es aproximadamente " << pow;
+
+	x = -2;
+	y = 3;
+
+	pow = power_t(x, y);
+	cout << "\nPotencia " << x << " a la " << y << " es aproximadamente " << pow;
+
+	x = 2;
+	y = -3;
+
+	pow = power_t(x, y);
+	cout << "\nPotencia " << x << " a la " << y << " es aproximadamente " << pow;
+
+	x = 0.5;
+	y = 3;
+
+	pow = power_t(x, y);
+	cout << "\nPotencia " << x << " a la " << y << " es aproximadamente " << pow;
+
+	x = 2;
+	y = 0.3;
+
+	pow = power_t(x, y);
+	cout << "\nPotencia " << x << " a la " << y << " es aproximadamente " << pow;
+
 	return 0;
 }

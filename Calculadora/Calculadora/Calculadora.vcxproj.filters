@@ -15,7 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Calculadora.cpp">
+    <ClCompile Include="fun_tras.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
   </ItemGroup>

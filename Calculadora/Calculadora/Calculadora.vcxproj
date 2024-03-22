@@ -130,7 +130,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Calculadora.cpp" />
+    <ClCompile Include="fun_tras.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="funtras.h" />

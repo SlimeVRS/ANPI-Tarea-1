@@ -124,7 +124,7 @@ cpp_dec_float_50 root_t(cpp_dec_float_50 x, cpp_dec_float_50 y)
 	{
 		cout << "\nERROR: " << e.what() << endl;
 	}
-	return 0;
+	return -1;
 }
 
 /*
@@ -392,7 +392,7 @@ cpp_dec_float_50 asin_t(cpp_dec_float_50 x)
 	{
 		cout << "\nERROR: " << e.what() << endl;
 	}
-	return 0;
+	return -2;
 }
 
 /*
@@ -413,7 +413,7 @@ cpp_dec_float_50 acos_t(cpp_dec_float_50 x)
 	{
 		cout << "\nERROR: " << e.what() << endl;
 	}
-	return 0;
+	return -1;
 }
 
 /*

@@ -131,6 +131,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="fun_tras.cpp" />
+    <ClCompile Include="test_funtras.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="funtras.h" />

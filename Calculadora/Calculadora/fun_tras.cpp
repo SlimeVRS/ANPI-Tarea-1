@@ -1,5 +1,6 @@
 // Librerias
 #include "funtras.h"
+#include <boost/lexical_cast.hpp>
 using namespace std;
 
 // Variables globales
@@ -17,6 +18,14 @@ cpp_dec_float_50 factorial(cpp_dec_float_50 x)
 	cpp_dec_float_50 temp = 1;
 	temp = x * factorial(x - 1);
 	return temp;
+}
+
+bool is_integer(cpp_dec_float_50 x)
+{
+	int redondeoAbajo = static_cast<int>(x);
+	int redondeoArriba = static_cast<int>(x + 1);
+
+	return x == redondeoAbajo && x + 1 == redondeoArriba;
 }
 
 /*
@@ -95,7 +104,8 @@ cpp_dec_float_50 root_t(cpp_dec_float_50 x, cpp_dec_float_50 y)
 {
 	try
 	{
-		if (0 < x && 2 < y)
+		bool entero = is_integer(y);
+		if (0 < x && 2 < y && entero)
 		{
 			cpp_dec_float_50 xk = x * divi_t(2);
 			cpp_dec_float_50 xk_1 = 0;
@@ -118,6 +128,10 @@ cpp_dec_float_50 root_t(cpp_dec_float_50 x, cpp_dec_float_50 y)
 				throw runtime_error(
 					"No se puede obtener una raiz de un numero negativo!"
 				);
+		}
+		else
+		{
+			return power_t(x, divi_t(y));
 		}
 	}
 	catch (const exception& e)
@@ -423,7 +437,7 @@ cpp_dec_float_50 atan_t(cpp_dec_float_50 x)
 {
 	cpp_dec_float_50 sk = 0;
 	cpp_dec_float_50 sk_1 = 0;
-	if (-1 <= x && 1 <= x)
+	if (-1 <= x && x <= 1)
 	{
 		for (int i = 0; i < iterMax; i++)
 		{
@@ -550,107 +564,195 @@ cpp_dec_float_50 power_t(cpp_dec_float_50 x, cpp_dec_float_50 y)
 
 int main()
 {
-	cpp_dec_float_50 x = 10;
 
-	// Factorial 
-	cpp_dec_float_50 fact = factorial(x);
-	cout << "Factorial de " << x << " es " << setprecision(numeric_limits<cpp_dec_float_50>::digits10) << fact;
+	// Explicacion
+	cout << "Calculadora funtras\n" << endl;
+	cout << "Como utilizar:" << endl;
+	cout << "Se va a desplegar un menu con diferentes opciones (1-21), las cuales correponden a las funciones implementadas." << endl;
+	cout << "Una vez seleccionado la funcion, ingrese el valor para \"x\" que usted usted desee." << endl;
+	cout << "De ser necesario, tambien debera ingresar un valor para \"y\".\n" << endl;
+	cout << "Nota importante:" << endl;
+	cout << "Si quiere utilizar el valor de \"pi\", ingrese textualmente \"pi_t\"" << endl;
+	cout << "La calculadora esta preparada para utilizar dicho valor.\n" << endl;
 
-	// Inverso
-	x = 0;
-	cpp_dec_float_50 inv = divi_t(x);
-	cout << "\nInverso de " << x << " es aproximadamente " << inv;
+	cout << "Elaborado por:" << endl;
+	cout << "- Axel Bruno Flores Lara" << endl;
+	cout << "- Marco Vinicio Rivera Serrano" << endl;
+	cout << "- Juan Daniel Rodriguez Montero" << endl;
+	cout << "- Julio Josue Varela Venegas" << endl;
 
-	// Raiz cuadrada 
-	x = -5;
-	cpp_dec_float_50 sqrt = sqrt_t(x);
-	cout << "\nRaiz cuadrada de " << x << " es aproximadamente " << sqrt;
+	system("pause");
+	system("cls");
 
-	// Raiz 
-	cpp_dec_float_50 y = 3;
-	cpp_dec_float_50 root = root_t(x, y);
-	cout << "\nRaiz de " << x << " con indice " << y << " es aproximadamente " << root;
+	while (true)
+	{
+		// Menú de opciones
+		cout << "Seleccione una funcion a calcular:" << endl;
+		cout << "1.  senh (x)" << endl;
+		cout << "2.  cosh (x)" << endl;
+		cout << "3.  tanh (x)" << endl;
+		cout << "4.  asen (x)" << endl;
+		cout << "5.  acos (x)" << endl;
+		cout << "6.  atan (x)" << endl;
+		cout << "7.  sec (x)" << endl;
+		cout << "8.  csc (x)" << endl;
+		cout << "9.  cot (x)" << endl;
+		cout << "10. sen (x)" << endl;
+		cout << "11. cos (x)" << endl;
+		cout << "12. tan (x)" << endl;
+		cout << "13. ln (x)" << endl;
+		cout << "14. log10 (x)" << endl;
+		cout << "15. x!" << endl;
+		cout << "16. 1/x (x)" << endl;
+		cout << "17. raiz (x)" << endl;
+		cout << "18. exp (x)" << endl;
+		cout << "19. raiz_y (x)" << endl;
+		cout << "20. x^y " << endl;
+		cout << "21. log_y (x)" << endl;
 
-	x = 0;
-	// Logaritmo natural
-	cpp_dec_float_50 ln = ln_t(x);
-	cout << "\nLogaritmo natural de " << x << " es aproximadamente " << ln;
+		// Selección de función
+		int opcion;
+		cout << "Opcion: ";
+		cin >> opcion;
 
-	// Logaritmo x base y 
-	y = 10;
-	cpp_dec_float_50 log = log_t(x, y);
-	cout << "\nLogaritmo de " << x << " base " << y << " es aproximadamente " << log;
+		// Valores de entrada
 
-	x = pi_t * divi_t(2);
-	// Tan
-	cpp_dec_float_50 tan = tan_t(x);
-	cout << "\nTan de " << x << " es aproximadamente " << tan;
+		string input_1, input_2;
+		cpp_dec_float_50 x, y;
+		cout << "Ingrese el valor de x: ";
+		cin >> input_1;
+		if (input_1 == "pi_t")
+		{
+			x = pi_t;
+		}
+		else
+		{
+			x = boost::lexical_cast<cpp_dec_float_50>(input_1);
+		}
 
-	// Arcoseno (revisar)
-	x = 5 ;
-	cpp_dec_float_50 asin = asin_t(x);
-	cout << "\nArcseno de " << x << " es aproximadamente " << asin;
+		if (opcion == 20) {
+			cout << "Ingrese el valor de y: ";
+			cin >> input_2;
+			if (input_2 == "pi_t")
+			{
+				y = pi_t;
+			}
+			else
+			{
+				y = boost::lexical_cast<cpp_dec_float_50>(input_2);
+			}
+		}
 
-	cpp_dec_float_50 acos = acos_t(x);
-	cout << "\nArcoseno de " << x << " es aproximadamente " << acos;
+		// Resultado de la operación
+		cpp_dec_float_50 resultado;
 
-	cout << "\n\n########################\n";
-	cout << "# Seccion de potencias #\n";
-	cout << "########################\n";
+		switch (opcion) {
+		case 1:
+			resultado = sinh_t(x);
+			break;
+		case 2:
+			resultado = cosh_t(x);
+			break;
+		case 3:
+			resultado = tanh_t(x);
+			break;
+		case 4:
+			resultado = asin_t(x);
+			break;
+		case 5:
+			resultado = acos_t(x);
+			break;
+		case 6:
+			resultado = atan_t(x);
+			break;
+		case 7:
+			resultado = sec_t(x);
+			break;
+		case 8:
+			resultado = csc_t(x);
+			break;
+		case 9:
+			resultado = cot_t(x);
+			break;
+		case 10:
+			resultado = sin_t(x);
+			break;
+		case 11:
+			resultado = cos_t(x);
+			break;
+		case 12:
+			resultado = tan_t(x);
+			break;
+		case 13:
+			resultado = ln_t(x);
+			break;
+		case 14:
+			resultado = log(x);
+			break;
+		case 15:
+			resultado = factorial(x);
+			break;
+		case 16:
+			resultado = divi_t(x);
+			break;
+		case 17:
+			resultado = sqrt_t(x);
+			break;
+		case 18:
+			resultado = exp_t(x);
+			break;
+		case 19:
+			cout << "Ingrese el valor de y: ";
+			cin >> input_2;
+			if (input_2 == "pi_t")
+			{
+				y = pi_t;
+			}
+			else
+			{
+				y = boost::lexical_cast<cpp_dec_float_50>(input_2);
+			}
+			resultado = root_t(x, y);
+			break;
+		case 20:
+			resultado = power_t(x, y);
+			break;
+		case 21:
+			cout << "Ingrese el valor de y: ";
+			cin >> input_2;
+			if (input_2 == "pi_t")
+			{
+				y = pi_t;
+			}
+			else
+			{
+				y = boost::lexical_cast<cpp_dec_float_50>(input_2);
+			}
+			resultado = log_t(x, y);
+			break;
+		default:
+			cerr << "Opción no válida." << endl;
+			return 1;
+		}
 
-	x = 0;
-	y = 0;
+		// Muestra el resultado de la operación
+		cout << "Resultado de la operacion es: ";
+		cout << setprecision(numeric_limits<cpp_dec_float_50>::digits10) << resultado << endl;
 
-	cpp_dec_float_50 pow = power_t(x, y);
-	cout << "\nPotencia " << x << " a la " << y << " es aproximadamente " << pow;
+		cout << "Desea hacer otra operacion? 1 (y) / 0 (n): ";
+		int close;
+		cin >> close;
 
-	x = 0;
-	y = -8;
-
-	pow = power_t(x, y);
-	cout << "\nPotencia " << x << " a la " << y << " es aproximadamente " << pow;
-
-	x = 4;
-	y = 0;
-
-	pow = power_t(x, y);
-	cout << "\nPotencia " << x << " a la " << y << " es aproximadamente " << pow;
-
-	x = -4;
-	y = 0;
-
-	pow = power_t(x, y);
-	cout << "\nPotencia " << x << " a la " << y << " es aproximadamente " << pow;
-
-	x = 2;
-	y = 3;
-
-	pow = power_t(x, y);
-	cout << "\nPotencia " << x << " a la " << y << " es aproximadamente " << pow;
-
-	x = -2;
-	y = 3;
-
-	pow = power_t(x, y);
-	cout << "\nPotencia " << x << " a la " << y << " es aproximadamente " << pow;
-
-	x = 2;
-	y = -3;
-
-	pow = power_t(x, y);
-	cout << "\nPotencia " << x << " a la " << y << " es aproximadamente " << pow;
-
-	x = 0.5;
-	y = 3;
-
-	pow = power_t(x, y);
-	cout << "\nPotencia " << x << " a la " << y << " es aproximadamente " << pow;
-
-	x = 2;
-	y = 0.3;
-
-	pow = power_t(x, y);
-	cout << "\nPotencia " << x << " a la " << y << " es aproximadamente " << pow;
-
+		switch (close)
+		{
+		case 1:
+			system("cls");
+			break;
+		case 0:
+			return 0;
+		default:
+			break;
+		}
+	}
 	return 0;
 }
